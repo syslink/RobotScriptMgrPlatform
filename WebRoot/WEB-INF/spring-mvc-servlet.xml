@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+xmlns:context="http://www.springframework.org/schema/context"  
+xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="  
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+http://www.springframework.org/schema/mvc   
+http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd" >  
+  
+    <!-- Spring为我们提供了一种极为方便注册这些BeanPostProcessor的方式，  
+        即使用<context:annotation- config/>隐式地向 Spring容器注册  
+        AutowiredAnnotationBeanPostProcessor、  
+        RequiredAnnotationBeanPostProcessor、  
+        CommonAnnotationBeanPostProcessor以及  
+        PersistenceAnnotationBeanPostProcessor这4个BeanPostProcessor -->  
+    <context:annotation-config />  
+      
+    <!-- <mvc:annotation-driven /> 是一种简写形式,  
+        会自动注册DefaultAnnotationHandlerMapping与  
+        AnnotationMethodHandlerAdapter 两个bean,  
+        是spring MVC为@Controllers分发请求所必须的 -->  
+    <mvc:annotation-driven conversion-service="conversionService">
+	    <mvc:message-converters>  
+	        <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+               <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+	    </mvc:message-converters>  
+    </mvc:annotation-driven>  
+      
+      
+    <!-- ①注册ConversionService -->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+	    <property name="converters">
+	       <list>
+		        <bean class="com.pirobot.framework.web.EmptyStringToNullConverter"/>
+	        </list>
+	    </property>
+	</bean>
+   <!--使Spring支持自动检测组件，如注解的Controller -->  
+   <context:component-scan base-package="com.pirobot.cmp.api.controller" />  
+   <context:component-scan base-package="com.pirobot.cmp.admin.controller" />  
+  
+   <!-- 支持上传文件 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+        <!--5M-->  
+        <property name="maxUploadSize" value="524288000"/>  
+        <!--resolveLazily属性启用是为了推迟文件解析，以便在程序 中捕获文件大小异常-->  
+        <property name="resolveLazily" value="true"/>  
+    </bean> 
+    
+	<bean  class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+	     <property name="exceptionMappings">  
+	        <props>  
+	            <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">/console/file/outSize.action</prop>  
+	        </props>  
+         </property>  
+	</bean>
+	
+    
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>   
+        <property name="prefix" value="/WEB-INF/console/" />  
+        <property name="suffix" value=".jsp" />  
+    </bean>     
+      
+   <mvc:interceptors>  
+    <mvc:interceptor>  
+        <mvc:mapping path="/cgi/**"/>  
+        <!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的 -->  
+        <bean class="com.pirobot.framework.web.interceptor.AuthVerifictionInterceptor"/>  
+    </mvc:interceptor>  
+    <mvc:interceptor>  
+        <mvc:mapping path="/console/file/upload.action"/>  
+        <!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的 -->  
+        <bean class="com.pirobot.framework.web.interceptor.FileUploadInterceptor">
+           <property name="maxSize" value="5242880"/>
+        </bean>  
+    </mvc:interceptor>  
+</mvc:interceptors>  
+</beans>  

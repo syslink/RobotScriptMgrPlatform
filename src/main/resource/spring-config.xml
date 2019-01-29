@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"  
+	xsi:schemaLocation=" 
+	  http://www.springframework.org/schema/beans 
+	  http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	  http://www.springframework.org/schema/tx 
+	  http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	  http://www.springframework.org/schema/aop 
+	  http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	  http://www.springframework.org/schema/context  
+      http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	"
+	> 
+
+	<!-- =============================================================== -->
+	<!-- Resources                                                       -->
+	<!-- =============================================================== -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	
+		
+	    <!-- 数据源配置 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
+		<property name="breakAfterAcquireFailure" value="${c3p0.breakAfterAcquireFailure}" />
+		<property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />
+    </bean>
+	
+	
+	<!-- sessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+		<list>
+			<value>com.pirobot.cmp.model.User </value>
+			<value>com.pirobot.cmp.model.Message</value>
+			<value>com.pirobot.cmp.model.Script</value>
+			<value>com.pirobot.cmp.model.ScriptCommand</value>
+			<value>com.pirobot.cmp.model.Robot</value>
+			<value>com.pirobot.cmp.model.RobotRecord</value>
+			<value>com.pirobot.cmp.model.Wifi</value>
+		</list>
+		</property>
+		
+		<property name="mappingLocations">  
+	        <list>  
+	           <value>classpath:hibernate/hbm/*.hbm.xml</value>  
+	        </list>  
+        </property>  
+      
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.use_sql_banners">true</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+    <aop:config proxy-target-class="true">
+		<aop:pointcut expression="execution(* com.pirobot.cmp.service.impl.*.*(..))" id="Serivce" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="Serivce" />
+	</aop:config>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut expression="execution(* com.pirobot.cmp.cim.session.manager.*.*(..))" id="SessionManager" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="SessionManager" />
+	</aop:config>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="count*" read-only="true" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="set*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- =============================================================== -->
+	<!-- ***************  context component-scan begin  ***************  -->
+	<!-- =============================================================== -->
+	
+	<context:component-scan base-package="com.pirobot.cmp.dao.impl" use-default-filters="false">
+	  <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+	</context:component-scan>
+	
+	<context:component-scan base-package="com.pirobot.cmp.service.impl" use-default-filters="false">
+	  <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	
+	<context:component-scan base-package="com.pirobot.cmp.cim.push" use-default-filters="false">
+	  <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	
+	<context:component-scan base-package="com.pirobot.cmp.cim.session.manager" use-default-filters="false">
+	  <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	
+	
+	<!-- =============================================================== -->
+	<!-- ***************  context component-scan end  ***************    -->
+	<!-- =============================================================== -->
+</beans>

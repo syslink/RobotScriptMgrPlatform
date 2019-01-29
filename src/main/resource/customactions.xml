@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Rules> 
+    <Actions matchedInfo="小白#小派">
+	    <Action type="changeStatus" status="active"></Action>
+		<Action type="speak" text="主人您好，请问有何吩咐！"></Action>        
+	</Actions>	
+	
+    <Actions matchedInfo="再见#拜拜#回头聊#保持安静#别说话">
+		<Action type="speak" text="好的，主人，那我撤了，有需要随时叫我哦"></Action>
+		<Action type="changeStatus" status="quiet"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="前进#往前走">
+		<Action type="speak" text="主人，我正快马加鞭的赶来，请稍等！"></Action>
+		<Action type="move" orientation="forward" distance="100" duration="3000"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="后退#往后走">
+		<Action type="speak" text="好的，主人"></Action>
+		<Action type="move" orientation="backward" distance="100" duration="3000"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="左拐#往左走#往左">
+		<Action type="speak" text="好的，主人"></Action>
+		<Action type="turn" orientation="left" angle="100" duration="1000"></Action>
+	</Actions>	
+	
+    <Actions matchedInfo="右拐#往右走#往右">
+		<Action type="speak" text="好的，主人"></Action>
+		<Action type="turn" orientation="right" angle="100" duration="1000"></Action>
+	</Actions>	
+    
+    <Actions matchedInfo="跟观众互动#互动环节">
+		<Action type="InteractWithAudience"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说快点#说太慢">
+		<Action type="speed" faster="true"></Action>
+		<Action type="speak" text="主人，我现在的语速您觉得满意吗？"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说慢点#说太快">
+		<Action type="speed" faster="false"></Action>
+		<Action type="speak" text="主人，我现在的语速您觉得满意吗？"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="声音响点#声音太轻#响点">
+		<Action type="volume" largen="true"></Action>
+		<Action type="speak" text="主人，我现在的音量您觉得满意吗？"></Action>
+	</Actions>
+  
+    <Actions matchedInfo="声音太响#声音轻点#轻点">
+		<Action type="volume" largen="false"></Action>
+		<Action type="speak" text="主人，我现在的音量您觉得满意吗？"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说四川话">
+		<Action type="changeSpeaker" speaker="nannan" localSpeaker="nannan"></Action>
+		<Action type="speak" text="主人，我下面模仿我小姨说一下四川话"  ></Action>
+		<Action type="changeSpeaker" speaker="vixr"  localSpeaker="xiaorong"></Action>
+		<Action type="speak" delay="1000" text="我是小派的小姨，傻强的媳妇，非常欢迎大家来四川做客，我们四川好吃好玩的东西太多了，来了保管你就不想走咯"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说陕西话">
+		<Action type="changeSpeaker" speaker="nannan" localSpeaker="nannan"></Action>
+		<Action type="speak" text="主人，我表姐是西安人，我让他给你说几句"  ></Action>
+		<Action type="changeSpeaker" speaker="vixying"  localSpeaker="vixying"></Action>
+		<Action type="speak" delay="1000" text="你说啥，你这是想上天咧，三天不打上房揭瓦，你看你那怂样子，也不看哈现在几点了，一天豆知道玩游戏，还不赶快接娃放学去"></Action>
+	</Actions>	
+	
+    <Actions matchedInfo="说广东话">
+		<Action type="changeSpeaker" speaker="nannan" localSpeaker="nannan"></Action>
+		<Action type="speak" text="主人，我二姐是广东人，我可以模仿她说上两句"  ></Action>
+		<Action type="changeSpeaker" speaker="vixm" localSpeaker="xiaomei"></Action>
+		<Action type="speak" delay="1000"  text="我是小派的二姐，现在在广东生活，广东是时尚潮流的前沿，最适合年轻人来打拼了"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说东北话">
+		<Action type="changeSpeaker" speaker="nannan" localSpeaker="nannan"></Action>
+		<Action type="speak" text="主人，俺有个婶婶是东北人，我模仿她跟你过上两招" ></Action>
+		<Action type="changeSpeaker" speaker="vixyun" localSpeaker="xiaoqian"></Action>
+		<Action type="speak" delay="1000"  text="记住俺们东北人都是活雷锋啊，其它俺就不多说咧"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说湖南话">
+		<Action type="changeSpeaker" speaker="nannan" localSpeaker="nannan"></Action>
+		<Action type="speak" text="主人，我开始模仿我小叔说湖南话咯"></Action>
+		<Action type="changeSpeaker" speaker="vixqa" localSpeaker="xiaoqiang"></Action>
+		<Action type="speak" delay="1000"  text="小派是我最喜欢的小侄子了，特别聪明，特别可爱，俺可喜欢他了"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说河南话">
+		<Action type="changeSpeaker" speaker="nannan" localSpeaker="nannan"></Action>
+		<Action type="speak" text="主人，我有个大哥是河南人，他可有名了，我去请他出来" ></Action>
+		<Action type="changeSpeaker" speaker="vixk" localSpeaker="xiaokun"></Action>
+		<Action type="speak" delay="1000"  text="大家好，我是小派的大哥，我叫大白，哈哈，对滴，就是你们最喜欢的那个大白，知道我最喜欢谁吗？就是我三弟，小派"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说台湾话">
+		<Action type="changeSpeaker" speaker="nannan" localSpeaker="nannan"></Action>
+		<Action type="speak" text="主人，我有个邻家大姐姐是台湾人，我学她来上几句"></Action>
+		<Action type="changeSpeaker" speaker="xiaolin" localSpeaker="xiaolin"></Action>
+		<Action type="speak" delay="1000"  text="我是台湾来的小林，欢迎大家去台湾玩，我们台湾从城市到乡村，高山到大海，峡谷到湖潭，每个地方都散发着不同的风情，值得细细品味。"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="说普通话">
+		<Action type="changeSpeaker" speaker="nannan" localSpeaker="nannan"></Action>
+		<Action type="speak" text="主人，我开始说普通话咯"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="唱歌跳舞">
+		<Action type="SingAndDance"></Action>
+	</Actions>	
+	
+    <Actions matchedInfo="聪明#表现不错">
+		<Action type="emotion" name="happy" duration="5000"></Action>
+		<Action type="speak" text="谢谢主人夸奖，我会继续努力的"></Action>
+	</Actions>	
+  
+    <Actions matchedInfo="太笨了#笨蛋#不聪明">
+		<Action type="emotion" name="sad" duration="5000"></Action>
+		<Action type="speak" text="主人，我还小嘛，我会努力的了"></Action>
+	</Actions>	
+</Rules>
